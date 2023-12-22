@@ -72,6 +72,7 @@ class RPI_Node(Node):
             self.get_logger().debug("Publishing ticks counts: {0} and {1}".format(self.left_tick_counts.data, self.right_tick_counts.data))
             self.left_ticks_pub.publish(self.left_tick_counts)
             self.right_ticks_pub.publish(self.right_tick_counts)
+            self.battery_voltage.publish(self.battery_voltage)
 
     def cmd_vel_callback(self, msg):
         self.get_logger().debug("Received cmd_vel: {0} and {1}".format(msg.linear.x, msg.angular.z))
