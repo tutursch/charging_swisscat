@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
-from std_msgs.msg import Int16
+from std_msgs.msg import Int16, Float32
 from geometry_msgs.msg import Twist
 from rclpy.qos import QoSProfile
 import serial
@@ -26,7 +26,7 @@ class RPI_Node(Node):
         self.left_tick_counts.data = 0
         self.right_tick_counts = Int16()
         self.right_tick_counts.data = 0
-        self.battery_voltage = Int16()
+        self.battery_voltage = Float32()
         self.battery_voltage.data = 0
         self.last_received_ticks = None
 
@@ -36,7 +36,7 @@ class RPI_Node(Node):
         self.ser = serial.Serial('/dev/ttyACM0', BAUD_RATE, timeout=0.1)
         
         # Publish encoder ticks counts
-        self.battery_voltage_pub = self.create_publisher(Int16, 'battery_voltage', qos_profile)
+        self.battery_voltage_pub = self.create_publisher(Float32, 'battery_voltage', qos_profile)
         self.left_ticks_pub = self.create_publisher(Int16, 'left_ticks_counts', qos_profile)
         self.right_ticks_pub = self.create_publisher(Int16, 'right_ticks_counts', qos_profile)
         self.subscription = self.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, qos_profile)
