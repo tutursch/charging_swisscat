@@ -36,7 +36,7 @@ class RPI_Node(Node):
         self.ser = serial.Serial('/dev/ttyACM0', BAUD_RATE, timeout=0.1)
         
         # Publish encoder ticks counts
-        self.battery_voltage = self.create_publisher(Int16, 'battery_voltage', qos_profile)
+        self.battery_voltage_pub = self.create_publisher(Int16, 'battery_voltage', qos_profile)
         self.left_ticks_pub = self.create_publisher(Int16, 'left_ticks_counts', qos_profile)
         self.right_ticks_pub = self.create_publisher(Int16, 'right_ticks_counts', qos_profile)
         self.subscription = self.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, qos_profile)
@@ -57,8 +57,8 @@ class RPI_Node(Node):
 
         if received_ticks_counts:
             try:
-                self.left_tick_counts.data, self.right_tick_counts.data =  int(received_ticks_counts[0]), int(received_ticks_counts[1])
-                self.last_received_ticks = (self.left_tick_counts.data, self.right_tick_counts.data)
+                self.left_tick_counts.data, self.right_tick_counts.data, self.battery_voltage.data =  int(received_ticks_counts[0]), int(received_ticks_counts[1]), int(received_ticks_counts[2])
+                self.last_received_ticks = (self.left_tick_counts.data, self.right_tick_counts.data, self.battery_voltage.data)
             except:
                 self.get_logger().debug("Wrong data type received for ticks counts: {0}".format(type(received_ticks_counts)))
         else:
@@ -72,7 +72,7 @@ class RPI_Node(Node):
             self.get_logger().debug("Publishing ticks counts: {0} and {1}".format(self.left_tick_counts.data, self.right_tick_counts.data))
             self.left_ticks_pub.publish(self.left_tick_counts)
             self.right_ticks_pub.publish(self.right_tick_counts)
-            self.battery_voltage.publish(self.battery_voltage)
+            self.battery_voltage_pub.publish(self.battery_voltage)
 
     def cmd_vel_callback(self, msg):
         self.get_logger().debug("Received cmd_vel: {0} and {1}".format(msg.linear.x, msg.angular.z))
