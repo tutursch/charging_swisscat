@@ -57,7 +57,7 @@ class RPI_Node(Node):
 
         if received_ticks_counts:
             try:
-                self.battery_voltage.data, self.left_tick_counts.data, self.right_tick_counts.data =  int(received_ticks_counts[0]), int(received_ticks_counts[1]), int(received_ticks_counts[2])
+                self.battery_voltage.data, self.left_tick_counts.data, self.right_tick_counts.data =  float(received_ticks_counts[0]), int(received_ticks_counts[1]), int(received_ticks_counts[2])
                 self.last_received_ticks = (self.battery_voltage.data, self.left_tick_counts.data, self.right_tick_counts.data)
             except:
                 self.get_logger().debug("Wrong data type received for ticks counts: {0}".format(type(received_ticks_counts)))
